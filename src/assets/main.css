@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ft-bg: #141414;
+    --ft-panel: #1c1c1c;
+    --ft-panel-soft: #212121;
+    --ft-border: rgba(255, 255, 255, 0.08);
+    --ft-border-strong: rgba(255, 255, 255, 0.14);
+    --ft-text: #e5e7eb;
+    --ft-muted: #9ca3af;
+    --ft-muted-strong: #cbd5f5;
+    --ft-accent: #f59e0b;
+    --ft-accent-soft: rgba(245, 158, 11, 0.18);
+  }
+
+  html {
+    font-family: 'Space Grotesk', 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  }
+
+  body {
+    background-color: var(--ft-bg);
+    color: var(--ft-text);
+  }
+
+  code,
+  pre {
+    font-family: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, monospace;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/15 px-4 py-2 text-sm font-semibold text-amber-200 shadow-[0_12px_35px_-18px_rgba(245,158,11,0.6)] transition;
+  }
+
+  .btn-primary:hover {
+    @apply -translate-y-0.5 border-amber-300/70 bg-amber-400/25 text-amber-100 shadow-[0_18px_45px_-20px_rgba(245,158,11,0.8)];
+  }
+
+  .btn-primary:focus-visible {
+    @apply outline-none ring-2 ring-amber-200/60 ring-offset-2 ring-offset-neutral-900;
+  }
+
+  .section-card {
+    @apply rounded-2xl border border-white/10 bg-white/5 px-6 py-5 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.55)];
+  }
+
+  .code-block {
+    @apply rounded-2xl border border-white/10 bg-neutral-900/80 px-5 py-4 text-sm text-slate-200 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)];
+  }
+}
+
+@layer utilities {
+  @keyframes fade-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-rise {
+    animation: fade-rise 0.6s ease-out both;
+  }
+
+  .fade-rise-delay-1 {
+    animation-delay: 0.08s;
+  }
+
+  .fade-rise-delay-2 {
+    animation-delay: 0.16s;
+  }
+}

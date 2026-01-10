@@ -1,0 +1,40 @@
+:root {
+  --status-waiting-text: #cbd5f5;
+  --status-valid-text: #22c55e;
+  --status-connected-text: #22c55e;
+  --status-corrupted-text: #ef4444;
+  --status-error-text: #f87171;
+  --status-closed-text: #ef4444;
+}
+
+[data-status] {
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+[data-status='waiting' i] {
+  color: var(--status-waiting-text);
+}
+
+[data-status='valid' i] {
+  color: var(--status-valid-text);
+}
+
+[data-status='connected' i] {
+  color: var(--status-connected-text);
+}
+
+[data-status='corrupted' i] {
+  color: var(--status-corrupted-text);
+}
+
+[data-status='error' i] {
+  color: var(--status-error-text);
+}
+
+[data-status='closed' i] {
+  color: var(--status-closed-text);
+}
