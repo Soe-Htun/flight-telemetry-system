@@ -10,11 +10,10 @@ const { flights } = useFlightFeed()
     <section class="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-12">
       <header class="text-center">
         <h1 class="text-3xl font-semibold text-slate-100 md:text-4xl">
-          FlightTelemetrySystemDemo
+          Flight Telemetry System
         </h1>
         <p class="mt-2 text-sm text-slate-400">
-          This demo runs with a telemetry interval of 5000 ms. Match the interval to verify your
-          implementation.
+          Live telemetry updates every 5000 ms by default.
         </p>
       </header>
 

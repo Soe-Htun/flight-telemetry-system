@@ -4,7 +4,7 @@ import type { Flight } from '@/types/flight'
 
 export const useFlightFeed = () => {
   const flights = ref<Flight[]>([])
-  const status = ref<FeedStatus>('connecting')
+  const status = ref<FeedStatus>('loading')
   const lastUpdated = ref<Date | null>(null)
   let stop: (() => void) | null = null
 

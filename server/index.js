@@ -113,8 +113,8 @@ const connectFlight = (flight) => {
 
   const message = JSON.stringify({
     type: 'subscribe',
-    flightId: Number(flight.id),
-    intervalMs: INTERVAL_MS
+    flightId: String(flight.id),
+    intervalMs: String(INTERVAL_MS)
   })
 
   const sendSubscribe = () => {

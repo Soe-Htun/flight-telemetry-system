@@ -1,5 +1,4 @@
 import type { Flight } from '@/types/flight'
-import { buildDemoFlights } from '@/services/demoTelemetry'
 
 export type FeedStatus = 'loading' | 'ready' | 'error'
 
@@ -41,7 +40,6 @@ export const createFlightFeed = (options: FlightFeedOptions): FlightFeed => {
   let socket: WebSocket | null = null
   const pollIntervalMs = 5000
   let currentFlights: Flight[] = []
-  const demoMode = import.meta.env.VITE_DEMO_MODE === 'true'
 
   const mergeFlight = (flights: Flight[], update: Flight) => {
     const next = flights.map((flight) =>
@@ -68,25 +66,11 @@ export const createFlightFeed = (options: FlightFeedOptions): FlightFeed => {
   return {
     start: () => {
       options.onStatus('loading')
-      load().then(() => {
-        if (demoMode && currentFlights.length > 0) {
-          const now = new Date()
-          currentFlights = buildDemoFlights(currentFlights, now)
-          options.onFlights(currentFlights)
-          options.onStatus('ready')
-        }
-      })
+      load()
       timer = window.setInterval(() => {
-        if (demoMode && currentFlights.length > 0) {
-          const now = new Date()
-          currentFlights = buildDemoFlights(currentFlights, now)
-          options.onFlights(currentFlights)
-          options.onStatus('ready')
-          return
-        }
         load()
       }, pollIntervalMs)
-      if (!demoMode && options.wsUrl) {
+      if (options.wsUrl) {
         socket = new WebSocket(options.wsUrl)
         socket.addEventListener('message', (event) => {
           try {
