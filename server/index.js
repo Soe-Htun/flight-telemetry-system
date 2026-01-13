@@ -15,12 +15,14 @@ const PACKET_SIZE_OFFSET = 0x0c
 const state = new Map()
 const sockets = new Map()
 
-const pad = (value, length) => String(value).padStart(length, '0')
-const formatTimestamp = (value) =>
-  `${pad(value.getHours(), 2)}:${pad(value.getMinutes(), 2)}:${pad(value.getSeconds(), 2)}.${pad(
-    value.getMilliseconds(),
-    3
-  )}`
+const timeFormat = new Intl.DateTimeFormat('en-SG', {
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  fractionalSecondDigits: 3,
+  hour12: false
+})
+const formatTimestamp = (value) => timeFormat.format(value)
 
 const crc16ccittFalse = (buffer) => {
   let crc = 0xffff

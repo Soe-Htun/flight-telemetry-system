@@ -88,6 +88,15 @@ Telemetry TCP Servers -> Node Proxy (TCP -> validate/parse) -> WebSocket -> Vue 
 - Start marker `0x82` at byte 0, end marker `0x80` at byte 35.
 - CRC-16/CCITT-FALSE is computed over bytes `0x00` to `0x1E` and compared to bytes `0x21-0x22`.
 
+## Server Responsibilities (`server/index.js`)
+
+- Loads flights from `REST_URL` and initializes each with `WAITING`.
+- Opens one TCP socket per flight and sends the subscribe JSON payload.
+- Buffers TCP chunks, re-syncs on the start marker, and extracts 36-byte packets.
+- Validates packet size, CRC, and value ranges, then sets `VALID` or `CORRUPTED`.
+- Broadcasts updates to all WebSocket clients and serves `/flights` for initial state.
+- Handles socket `error`, `timeout`, and `close` with status updates and reconnects.
+
 ## Technology Choices (Why)
 
 - Vue 3 + Vite: fast dev server and simple component model.
