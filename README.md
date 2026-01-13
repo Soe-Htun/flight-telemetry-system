@@ -2,12 +2,6 @@
 
 Real-time flight telemetry UI with a small TCP to WebSocket proxy.
 
-## Features
-
-- TCP proxy validates packet size, CRC, and value ranges.
-- Auto-reconnects TCP connections on close or error.
-- Responsive grid layout for desktop and mobile.
-
 ## Setup
 
 ```sh
@@ -42,11 +36,11 @@ Notes:
 - `VITE_WS_URL` is optional; when set, the app listens for real-time updates.
 - `TELEMETRY_HOST`, `REST_URL`, and `PORT` are used by the Node proxy; the server must load `.env` for them to be available.
 
-## Architecture Overview
+## Features
 
-- `server/index.js` opens one TCP connection per flight, validates packets, and pushes decoded
-  telemetry to WebSocket clients.
-- The Vue app fetches `/flights` from the proxy and subscribes to `/ws` for live updates.
+- TCP proxy validates packet size, CRC, and value ranges.
+- Auto-reconnects TCP connections on close or error.
+- Responsive grid layout for desktop and mobile.
 
 ## How It Works (Step by Step)
 
@@ -62,23 +56,6 @@ Notes:
 6. The proxy **broadcasts** the decoded telemetry to all WebSocket clients at `ws://localhost:4001/ws`.
 7. The Vue app **polls** `/flights` for initial data and **merges** live updates from WebSocket.
 
-## Sockets Used
-
-- **TCP (`net.Socket`)**: connects to telemetry servers and reads binary packets.
-- **WebSocket (`WebSocketServer`)**: streams decoded telemetry updates to the browser.
-
-## Data Flow (ASCII)
-
-```
-Telemetry TCP Servers -> Node Proxy (TCP -> validate/parse) -> WebSocket -> Vue UI
-```
-
-## Packet Parsing Rules
-
-- Packet size is 36 bytes (big-endian).
-- Start marker `0x82` at byte 0, end marker `0x80` at byte 35.
-- CRC-16/CCITT-FALSE is computed over bytes `0x00` to `0x1E` and compared to bytes `0x21-0x22`.
-
 ## Status Rules
 
 - `WAITING`: Default after flights are loaded, before telemetry arrives.
@@ -86,6 +63,30 @@ Telemetry TCP Servers -> Node Proxy (TCP -> validate/parse) -> WebSocket -> Vue 
 - `CORRUPTED`: Packet fails CRC or any value range check.
 - `ERROR`: TCP socket error.
 - `CLOSED`: TCP connection closed and reconnecting.
+
+## Status Styling (`data-status`)
+
+The UI sets a `data-status` attribute on each flight card status label. The CSS in
+`src/assets/status.css` uses attribute selectors (for example `[data-status='valid']`) to
+color-code the status text. This keeps the Vue template simple and makes it easy to update
+status colors without touching component logic.
+
+## Data Flow (ASCII)
+
+```
+Telemetry TCP Servers -> Node Proxy (TCP -> validate/parse) -> WebSocket -> Vue UI
+```
+
+## Sockets Used
+
+- **TCP (`net.Socket`)**: connects to telemetry servers and reads binary packets.
+- **WebSocket (`WebSocketServer`)**: streams decoded telemetry updates to the browser.
+
+## Packet Parsing Rules
+
+- Packet size is 36 bytes (big-endian).
+- Start marker `0x82` at byte 0, end marker `0x80` at byte 35.
+- CRC-16/CCITT-FALSE is computed over bytes `0x00` to `0x1E` and compared to bytes `0x21-0x22`.
 
 ## Technology Choices (Why)
 
