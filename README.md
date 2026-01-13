@@ -42,20 +42,6 @@ Notes:
 - `VITE_WS_URL` is optional; when set, the app listens for real-time updates.
 - `TELEMETRY_HOST`, `REST_URL`, and `PORT` are used by the Node proxy; the server must load `.env` for them to be available.
 
-### Proxy Environment (Optional)
-
-- `TELEMETRY_HOST` (default: `fts.onenex.dev`)
-- `REST_URL` (default: `https://fts.onenex.dev:4000/flights`)
-- `INTERVAL_MS` (default: `5000`)
-- `PORT` (default: `4001`)
-
-Set these when starting the proxy (the server does not read `.env` by default):
-
-```sh
-TELEMETRY_HOST=fts.onenex.dev REST_URL=https://fts.onenex.dev:4000/flights \
-INTERVAL_MS=5000 PORT=4001 npm run server
-```
-
 ## Architecture Overview
 
 - `server/index.js` opens one TCP connection per flight, validates packets, and pushes decoded
@@ -75,6 +61,17 @@ INTERVAL_MS=5000 PORT=4001 npm run server
 5. Each packet is **validated** (start/end markers, packet size, CRC, and value ranges).
 6. The proxy **broadcasts** the decoded telemetry to all WebSocket clients at `ws://localhost:4001/ws`.
 7. The Vue app **polls** `/flights` for initial data and **merges** live updates from WebSocket.
+
+## Sockets Used
+
+- **TCP (`net.Socket`)**: connects to telemetry servers and reads binary packets.
+- **WebSocket (`WebSocketServer`)**: streams decoded telemetry updates to the browser.
+
+## Data Flow (ASCII)
+
+```
+Telemetry TCP Servers -> Node Proxy (TCP -> validate/parse) -> WebSocket -> Vue UI
+```
 
 ## Packet Parsing Rules
 
