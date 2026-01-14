@@ -10,6 +10,7 @@ export const useFlightFeed = () => {
 
   onMounted(() => {
     const { apiBase, wsUrl } = buildFeedConfig()
+    // Start feed when view mounts; stop it when view unmounts.
     const feed = createFlightFeed({
       apiBase,
       wsUrl,

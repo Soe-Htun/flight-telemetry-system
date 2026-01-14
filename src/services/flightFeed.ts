@@ -14,6 +14,7 @@ type FlightFeed = {
   stop: () => void
 }
 
+// Ensure optional fields have defaults so UI logic is consistent.
 const normalizeFlights = (flights: Flight[]) =>
   flights.map((flight) => ({
     ...flight,
@@ -41,6 +42,7 @@ export const createFlightFeed = (options: FlightFeedOptions): FlightFeed => {
   const pollIntervalMs = 5000
   let currentFlights: Flight[] = []
 
+  // Merge a single flight update into the current list by id.
   const mergeFlight = (flights: Flight[], update: Flight) => {
     const next = flights.map((flight) =>
       flight.id === update.id ? { ...flight, ...update } : flight
@@ -50,6 +52,7 @@ export const createFlightFeed = (options: FlightFeedOptions): FlightFeed => {
     return [...next, update]
   }
 
+  // Load the full list via REST; used for initial state and polling.
   const load = async () => {
     try {
       const flights = await fetchFlights(options.apiBase)
@@ -65,6 +68,7 @@ export const createFlightFeed = (options: FlightFeedOptions): FlightFeed => {
 
   return {
     start: () => {
+      // Start polling and open WebSocket for live updates.
       options.onStatus('loading')
       load()
       timer = window.setInterval(() => {
@@ -91,6 +95,7 @@ export const createFlightFeed = (options: FlightFeedOptions): FlightFeed => {
       }
     },
     stop: () => {
+      // Stop polling and close WebSocket when view unmounts.
       stopped = true
       if (timer) window.clearInterval(timer)
       socket?.close()
